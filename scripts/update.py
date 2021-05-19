@@ -29,7 +29,7 @@ def update_tabla(tipo, gdf):
     gdf_copy = gdf.copy()
     gdf_copy = pd.concat([gpd.tools.sjoin(gdf_copy, departamentos.loc[[departamento]], how='left').dropna(subset=['index_right']) for departamento in departamentos.index]).rename(columns={'index_right':'departamento'})
     gdf_copy['url'] = gdf_copy.geometry.apply(lambda g: url_base.format(g.y, g.x))
-    gdf_copy.drop(columns=['geometry']).sort_values('departamento').to_csv(tipo + '.csv', index=False)
+    gdf_copy.drop(columns=['geometry']).sort_values(['departamento','name']).to_csv(tipo + '.csv', index=False)
 
 def update(tipo):
     gdf = tipo()
@@ -37,5 +37,5 @@ def update(tipo):
     update_tabla(tipo.__name__, gdf)
 
 departamentos = load_departamentos()
-update(gobierno)
+# update(gobierno)
 update(comunidad)
